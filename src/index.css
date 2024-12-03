@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Vscrollbar {
+  overflow-y: scroll;
+}
+
+.Vscrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.Vscrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.Vscrollbar::-webkit-scrollbar-thumb {
+  background-color: orange;
+  border-radius: 10px;
+}
+
+.Vscrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: orange transparent;
+}
