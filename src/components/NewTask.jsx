@@ -44,13 +44,13 @@ export function NewTask() {
 
   const onPressHandler = () => {
     if (
-      task.name.length != "" &&
-      task.project.length != "" &&
-      task.team.length != "" &&
-      task.owners.length > 0 &&
-      task.tags.length > 0 &&
+      task.name?.length != "" &&
+      task.project?.length != "" &&
+      task.team?.length != "" &&
+      task.owners?.length > 0 &&
+      task.tags?.length > 0 &&
       task.timeToComplete > 0 &&
-      task.status.length != ""
+      task.status?.length != ""
     ) {
       setPress(true);
     } else {
@@ -151,7 +151,7 @@ export function NewTask() {
               <Typography className="-mb-2" variant="h6">
                 Project Name
               </Typography>
-              {projects.length > 0 ? (
+              {projects?.length > 0 ? (
                 <SSingle
                   label="Project Name"
                   name="project"
@@ -175,7 +175,7 @@ export function NewTask() {
               <Typography className="-mb-2" variant="h6">
                 team
               </Typography>
-              {teams.length > 0 ? (
+              {teams?.length > 0 ? (
                 <SSingle
                   label="Team Name"
                   name="team"
@@ -199,7 +199,7 @@ export function NewTask() {
               <Typography className="-mb-2" variant="h6">
                 Owners
               </Typography>
-              {owners.length > 0 ? (
+              {owners?.length > 0 ? (
                 // <Select label="Tag" name="tags" onChange={onChangeHandler}>
                 //   {tags.map((ele, index) => (
                 //     <Option key={index}>{ele.name}</Option>
@@ -232,7 +232,7 @@ export function NewTask() {
               <Typography className="-mb-2" variant="h6">
                 Tags
               </Typography>
-              {tags.length > 0 ? (
+              {tags?.length > 0 ? (
                 // <Select label="Tag" name="tags" onChange={onChangeHandler}>
                 //   {tags.map((ele, index) => (
                 //     <Option key={index}>{ele.name}</Option>

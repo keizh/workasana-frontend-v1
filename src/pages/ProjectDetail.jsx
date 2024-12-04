@@ -125,7 +125,7 @@ function ProjectDetail() {
             </div>
           </div>
           <div className="row-span-9 flex flex-col xl:row-span-11 p-3">
-            <Typography className="mb-3">
+            <Typography className="mb-3" variant="h4">
               List Of Task associated with Project
             </Typography>
             <div className=" grow overflow-x-hidden overflow-y-auto p-2 flex flex-col gap-4 Vscrollbar">
