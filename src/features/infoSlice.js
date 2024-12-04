@@ -12,10 +12,10 @@ export const fetchTeams = createAsyncThunk(
           Authorization: localStorage.getItem(`token`),
         },
       });
+      const dataRes = await res.json();
       if (!res.ok) {
         throw new Error("Failed to fetch Teams");
       }
-      const dataRes = await res.json();
       return dataRes;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -33,10 +33,10 @@ export const fetchOwners = createAsyncThunk(
           Authorization: localStorage.getItem(`token`),
         },
       });
+      const dataRes = await res.json();
       if (!res.ok) {
         throw new Error("Failed to fetch Users");
       }
-      const dataRes = await res.json();
       return dataRes;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -54,10 +54,10 @@ export const fetchTags = createAsyncThunk(
           Authorization: localStorage.getItem(`token`),
         },
       });
+      const dataRes = await res.json();
       if (!res.ok) {
         throw new Error("Failed to fetch tags");
       }
-      const dataRes = await res.json();
       return dataRes;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -129,7 +129,9 @@ export const fetchProjects = createAsyncThunk(
         }
       );
       const dataRes = await res.json();
+      console.log(`fetch projects hit hit hit`);
       if (!res.ok) {
+        console.log(`fetch projects , inside !res.ok`);
         throw new Error(dataRes.message);
       }
       return dataRes;
