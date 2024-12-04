@@ -79,11 +79,11 @@ function Report() {
           </Typography>
           <Typography variant="lead" className="my-2">
             <span className="font-black">Total Work Done Last Week</span> :{" "}
-            {lastWeekData?.length}
+            {lastWeekData?.length || 0}
           </Typography>
           <Typography variant="lead" className="my-2">
             <span className="font-black">Total Days of Work Pending</span> :{" "}
-            {totalDaysOfWorkPending}
+            {totalDaysOfWorkPending || 0}
           </Typography>
           <div className="grid grid-cols-1 lg:grid-cols-2 pt-4 gap-5">
             {/* pie chart for team */}
@@ -131,7 +131,7 @@ function Report() {
                     onChange={(val) => setProject(val)}
                     label="Project"
                   >
-                    {projects.map((ele) => (
+                    {projects?.map((ele) => (
                       <Option key={ele._id} value={ele._id}>
                         {ele.name}
                       </Option>

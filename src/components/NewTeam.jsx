@@ -34,6 +34,8 @@ export function NewTeam() {
   const onPressHandler = () => {
     if (team.name != "" && team.description != "") {
       setPress(true);
+    } else {
+      setPress(false);
     }
   };
   //  NS ~ NON - Select
@@ -41,10 +43,8 @@ export function NewTeam() {
     const { name, value } = e.target;
     setTeam((team) => ({
       ...team,
-      [name]: value,
+      [name]: value.trim(),
     }));
-    // console.log(project);
-    // console.log(`press`, press);
   };
 
   useEffect(() => {
@@ -59,9 +59,10 @@ export function NewTeam() {
     console.log(team);
     setTimeout(() => {
       setLoader(false);
+      setPress(false);
       setTeam(initialTeam);
       handleOpen();
-    });
+    }, 2000);
   };
 
   return (
@@ -86,7 +87,6 @@ export function NewTeam() {
                 Team Name
               </Typography>
               <Input
-                value={team.name}
                 onChange={onChangeHandlerNS}
                 placeholder="Marketing-Team-Nestle-A1"
                 label="Team Name"
@@ -98,7 +98,6 @@ export function NewTeam() {
                 Task Name
               </Typography>
               <Textarea
-                value={team.description}
                 onChange={onChangeHandlerNS}
                 label="Project Description"
                 name="description"

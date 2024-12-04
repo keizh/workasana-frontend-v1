@@ -34,6 +34,8 @@ export function NewProject() {
   const onPressHandler = () => {
     if (project.name != "" && project.description != "") {
       setPress(true);
+    } else if (press) {
+      setPress(false);
     }
   };
   //  NS ~ NON - Select
@@ -41,10 +43,8 @@ export function NewProject() {
     const { name, value } = e.target;
     setProject((project) => ({
       ...project,
-      [name]: value,
+      [name]: value.trim(),
     }));
-    // console.log(project);
-    // console.log(`press`, press);
   };
 
   useEffect(() => {
@@ -60,8 +60,9 @@ export function NewProject() {
     setTimeout(() => {
       setLoader(false);
       setProject(initialProject);
+      setPress(false);
       handleOpen();
-    });
+    }, 1000);
   };
 
   return (
@@ -86,7 +87,7 @@ export function NewProject() {
                 Task Name
               </Typography>
               <Input
-                value={project.name}
+                // value={project.name}
                 onChange={onChangeHandlerNS}
                 label="Name"
                 name="name"
@@ -97,7 +98,7 @@ export function NewProject() {
                 Task Name
               </Typography>
               <Textarea
-                value={project.description}
+                // value={project.description}
                 onChange={onChangeHandlerNS}
                 label="Project Description"
                 name="description"

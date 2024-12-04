@@ -53,6 +53,8 @@ export function NewTask() {
       task.status.length != ""
     ) {
       setPress(true);
+    } else {
+      setPress(false);
     }
   };
   //  NS ~ NON - Select
@@ -110,6 +112,7 @@ export function NewTask() {
     console.log(task);
     setTimeout(() => {
       setLoader(false);
+      setPress(false);
       setTask(initialTask);
       handleOpen();
     });
