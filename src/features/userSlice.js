@@ -16,7 +16,7 @@ export const fetchUserTasks = createAsyncThunk(
       );
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch users tasks");
       }
       return dataRes;
     } catch (err) {
@@ -43,7 +43,7 @@ export const markCompletedASYNC = createAsyncThunk(
       );
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to task complete");
       }
       console.log(`dataRes`, dataRes);
       return dataRes;
@@ -93,8 +93,8 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserTasks.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.errorUser = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -106,8 +106,8 @@ const userSlice = createSlice({
       })
       .addCase(markCompletedASYNC.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.errorUser = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
   },
 });

@@ -4,7 +4,7 @@ import { data } from "react-router-dom";
 
 export const fetchTeams = createAsyncThunk(
   "fetch/teams",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
         method: "GET",
@@ -25,7 +25,7 @@ export const fetchTeams = createAsyncThunk(
 
 export const fetchOwners = createAsyncThunk(
   "fetch/owners",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/user`, {
         method: "GET",
@@ -46,7 +46,7 @@ export const fetchOwners = createAsyncThunk(
 
 export const fetchTags = createAsyncThunk(
   "fetch/tags",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/tags`, {
         method: "GET",
@@ -79,7 +79,7 @@ export const postNewTask = createAsyncThunk(
       });
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to post new Task");
       }
       dispatch(postNewTeamSYNC(dataRes.newTaskSaved));
       return dataRes;
@@ -91,7 +91,7 @@ export const postNewTask = createAsyncThunk(
 
 export const postNewProject = createAsyncThunk(
   "post/newProject",
-  async (data, { dispatch, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_SERVER_BASE_URL}/projects`,
@@ -106,7 +106,7 @@ export const postNewProject = createAsyncThunk(
       );
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed To Post New Project");
       }
       return dataRes;
     } catch (err) {
@@ -117,7 +117,7 @@ export const postNewProject = createAsyncThunk(
 
 export const fetchProjects = createAsyncThunk(
   "fetch/projects",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_SERVER_BASE_URL}/projects`,
@@ -132,7 +132,7 @@ export const fetchProjects = createAsyncThunk(
       console.log(`fetch projects hit hit hit`);
       if (!res.ok) {
         console.log(`fetch projects , inside !res.ok`);
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch projects");
       }
       return dataRes;
     } catch (err) {
@@ -143,7 +143,7 @@ export const fetchProjects = createAsyncThunk(
 
 export const postNewTeamASYNC = createAsyncThunk(
   "post/newTeam",
-  async (data, { dispatch, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
         method: "POST",
@@ -155,7 +155,7 @@ export const postNewTeamASYNC = createAsyncThunk(
       });
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("FAILED TO POST NEW TEAM");
       }
       return dataRes;
     } catch (err) {
@@ -180,7 +180,7 @@ export const fetchSpecificTask = createAsyncThunk(
       console.log(`line 111`, res);
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch specific task");
       }
       return dataRes;
     } catch (err) {
@@ -205,7 +205,7 @@ export const fetchProjectSpecificTask = createAsyncThunk(
       console.log(`line 111`, res);
       const dataRes = await res.json();
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch Project Specific Task");
       }
       return dataRes;
     } catch (err) {
@@ -216,7 +216,7 @@ export const fetchProjectSpecificTask = createAsyncThunk(
 
 export const fetchLastWeekReport = createAsyncThunk(
   "fetch/LastWeekReport",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_SERVER_BASE_URL}/report/last-week`,
@@ -230,7 +230,7 @@ export const fetchLastWeekReport = createAsyncThunk(
       const dataRes = await res.json();
       console.log(`fetchLastWeekReport`, dataRes);
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch last week report");
       }
       return dataRes;
     } catch (err) {
@@ -241,7 +241,7 @@ export const fetchLastWeekReport = createAsyncThunk(
 
 export const fetchTotalDaysOff = createAsyncThunk(
   "fetch/totalDaysOfPendingWork",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_SERVER_BASE_URL}/report/pending`,
@@ -255,7 +255,7 @@ export const fetchTotalDaysOff = createAsyncThunk(
       const dataRes = await res.json();
       console.log(`fetchTotalDaysOff`, dataRes);
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error("Failed to fetch total Days Off");
       }
       return dataRes;
     } catch (err) {
@@ -286,7 +286,7 @@ export const fetchClosedBy = createAsyncThunk(
       const dataRes = await res.json();
       console.log(`call finished`);
       if (!res.ok) {
-        throw new Error(dataRes.message);
+        throw new Error(`Failed to fetch ${who}  ${whom} `);
       }
       return dataRes;
     } catch (err) {
@@ -334,8 +334,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTeams.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -348,8 +348,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchOwners.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -362,8 +362,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTags.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -376,8 +376,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchProjects.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -389,8 +389,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewTask.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -403,8 +403,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewProject.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -417,8 +417,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewTeamASYNC.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -431,8 +431,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchSpecificTask.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -465,8 +465,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchProjectSpecificTask.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -479,8 +479,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchLastWeekReport.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -493,8 +493,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTotalDaysOff.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
 
     builder
@@ -515,8 +515,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchClosedBy.rejected, (state, action) => {
         state.status = "error";
-        console.log(action.error.message);
-        state.err = action.error.message;
+        console.log(action.error.message || action.payload);
+        state.err = action.error.message || action.payload;
       });
   },
 });
