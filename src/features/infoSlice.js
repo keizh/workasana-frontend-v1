@@ -1,171 +1,264 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postNewTeamSYNC } from "../features/userSlice";
+import { data } from "react-router-dom";
 
-export const fetchTeams = createAsyncThunk("fetch/teams", async () => {
-  const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
-    method: "GET",
-    headers: {
-      Authorization: localStorage.getItem(`token`),
-    },
-  });
-  const dataRes = await res.json();
-  return dataRes;
-});
-
-export const fetchOwners = createAsyncThunk("fetch/owners", async () => {
-  const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/user`, {
-    method: "GET",
-    headers: {
-      Authorization: localStorage.getItem(`token`),
-    },
-  });
-  const dataRes = await res.json();
-  return dataRes;
-});
-
-export const fetchTags = createAsyncThunk("fetch/tags", async () => {
-  const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/tags`, {
-    method: "GET",
-    headers: {
-      Authorization: localStorage.getItem(`token`),
-    },
-  });
-  const dataRes = await res.json();
-  return dataRes;
-});
-
-export const postNewTask = createAsyncThunk(
-  "post/newTask",
-  async (data, { dispatch }) => {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/tasks`, {
-      method: "POST",
-      headers: {
-        Authorization: localStorage.getItem(`token`),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const dataRes = await res.json();
-    dispatch(postNewTeamSYNC(dataRes.newTaskSaved));
-    return dataRes;
+export const fetchTeams = createAsyncThunk(
+  "fetch/teams",
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
+        method: "GET",
+        headers: {
+          Authorization: localStorage.getItem(`token`),
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch Teams");
+      }
+      const dataRes = await res.json();
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
-export const postNewProject = createAsyncThunk(
-  "post/newProject",
-  async (data, { dispatch }) => {
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/projects`,
-      {
+export const fetchOwners = createAsyncThunk(
+  "fetch/owners",
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/user`, {
+        method: "GET",
+        headers: {
+          Authorization: localStorage.getItem(`token`),
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch Users");
+      }
+      const dataRes = await res.json();
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const fetchTags = createAsyncThunk(
+  "fetch/tags",
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/tags`, {
+        method: "GET",
+        headers: {
+          Authorization: localStorage.getItem(`token`),
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch tags");
+      }
+      const dataRes = await res.json();
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const postNewTask = createAsyncThunk(
+  "post/newTask",
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/tasks`, {
         method: "POST",
         headers: {
           Authorization: localStorage.getItem(`token`),
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+      });
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    return dataRes;
+      dispatch(postNewTeamSYNC(dataRes.newTaskSaved));
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
-export const fetchProjects = createAsyncThunk("fetch/projects", async () => {
-  const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/projects`, {
-    method: "GET",
-    headers: {
-      Authorization: localStorage.getItem(`token`),
-    },
-  });
-  const dataRes = await res.json();
-  return dataRes;
-});
+export const postNewProject = createAsyncThunk(
+  "post/newProject",
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/projects`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
+      }
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const fetchProjects = createAsyncThunk(
+  "fetch/projects",
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/projects`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
+      }
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
 
 export const postNewTeamASYNC = createAsyncThunk(
   "post/newTeam",
-  async (data, { dispatch }) => {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
-      method: "POST",
-      headers: {
-        Authorization: localStorage.getItem(`token`),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const dataRes = await res.json();
-    return dataRes;
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/teams`, {
+        method: "POST",
+        headers: {
+          Authorization: localStorage.getItem(`token`),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
+      }
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
 export const fetchSpecificTask = createAsyncThunk(
   "fetch/specificTask",
-  async (id) => {
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/${id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      console.log(`line 111`, res);
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    console.log(`line 111`, res);
-    const dataRes = await res.json();
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
 export const fetchProjectSpecificTask = createAsyncThunk(
   "fetch/ProjectspecificTask",
-  async (id) => {
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/project/${id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/project/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      console.log(`line 111`, res);
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    console.log(`line 111`, res);
-    const dataRes = await res.json();
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
 export const fetchLastWeekReport = createAsyncThunk(
   "fetch/LastWeekReport",
-  async () => {
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/report/last-week`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/report/last-week`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      const dataRes = await res.json();
+      console.log(`fetchLastWeekReport`, dataRes);
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    console.log(`fetchLastWeekReport`, dataRes);
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
 export const fetchTotalDaysOff = createAsyncThunk(
   "fetch/totalDaysOfPendingWork",
-  async () => {
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/report/pending`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async ({ rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/report/pending`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      const dataRes = await res.json();
+      console.log(`fetchTotalDaysOff`, dataRes);
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    console.log(`fetchTotalDaysOff`, dataRes);
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
@@ -174,22 +267,29 @@ export const fetchTotalDaysOff = createAsyncThunk(
 
 export const fetchClosedBy = createAsyncThunk(
   "fetch/closedTask",
-  async ({ who, whom }) => {
-    console.log(`called`);
-    const res = await fetch(
-      `${
-        import.meta.env.VITE_SERVER_BASE_URL
-      }/report/closed-tasks?groupByCategory=${who}&value=${whom}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async ({ who, whom }, { rejectWithValue }) => {
+    try {
+      console.log(`called`);
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_SERVER_BASE_URL
+        }/report/closed-tasks?groupByCategory=${who}&value=${whom}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      const dataRes = await res.json();
+      console.log(`call finished`);
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    console.log(`call finished`);
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
@@ -232,7 +332,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTeams.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -245,7 +346,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchOwners.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -258,7 +360,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTags.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -269,9 +372,10 @@ const infoSlice = createSlice({
         state.status = "successful";
         state.projects = [...action.payload.allProjects];
       })
-      .addCase(fetchProjects.rejected, (state) => {
+      .addCase(fetchProjects.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -283,7 +387,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewTask.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -296,7 +401,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewProject.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -309,7 +415,8 @@ const infoSlice = createSlice({
       })
       .addCase(postNewTeamASYNC.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -322,7 +429,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchSpecificTask.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -355,7 +463,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchProjectSpecificTask.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -368,7 +477,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchLastWeekReport.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -381,7 +491,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchTotalDaysOff.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
 
     builder
@@ -402,7 +513,8 @@ const infoSlice = createSlice({
       })
       .addCase(fetchClosedBy.rejected, (state, action) => {
         state.status = "error";
-        state.err = action.error;
+        console.log(action.error.message);
+        state.err = action.error.message;
       });
   },
 });

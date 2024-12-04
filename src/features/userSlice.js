@@ -2,40 +2,54 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUserTasks = createAsyncThunk(
   "fetch/usertasks",
-  async (userId) => {
-    console.log(`userId`, userId);
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/me/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-        },
+  async (userId, { rejectWithValue }) => {
+    try {
+      console.log(`userId`, userId);
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/me/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+          },
+        }
+      );
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    return dataRes;
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
 export const markCompletedASYNC = createAsyncThunk(
   "post/markTask",
-  async (taskId) => {
-    console.log(`post/markTask has been hit`);
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/${taskId}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: localStorage.getItem(`token`),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "Completed" }),
+  async (taskId, { rejectWithValue }) => {
+    try {
+      console.log(`post/markTask has been hit`);
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/tasks/${taskId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: localStorage.getItem(`token`),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: "Completed" }),
+        }
+      );
+      const dataRes = await res.json();
+      if (!res.ok) {
+        throw new Error(dataRes.message);
       }
-    );
-    const dataRes = await res.json();
-    console.log(`dataRes`, dataRes);
-    return dataRes;
+      console.log(`dataRes`, dataRes);
+      return dataRes;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
@@ -79,7 +93,8 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserTasks.rejected, (state, action) => {
         state.status = "error";
-        state.errorUser = action.error;
+        console.log(action.error.message);
+        state.errorUser = action.error.message;
       });
 
     builder
@@ -91,7 +106,8 @@ const userSlice = createSlice({
       })
       .addCase(markCompletedASYNC.rejected, (state, action) => {
         state.status = "error";
-        state.errorUser = action.error;
+        console.log(action.error.message);
+        state.errorUser = action.error.message;
       });
   },
 });
