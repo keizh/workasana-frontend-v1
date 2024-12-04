@@ -42,6 +42,15 @@ export function NavigationSideBar() {
               </SpeedDialAction>
             );
           })}
+          <SpeedDialAction
+            className="w-24 bg-red-400 text-white"
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate(`/signin`);
+            }}
+          >
+            <Typography color={"white"}>Log Out</Typography>
+          </SpeedDialAction>
         </SpeedDialContent>
       </SpeedDial>
     </div>

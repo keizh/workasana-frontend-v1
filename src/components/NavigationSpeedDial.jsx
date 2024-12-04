@@ -29,6 +29,15 @@ function NavigationSpeedDial() {
           </Button>
         );
       })}
+      <Button
+        onClick={() => {
+          localStorage.removeItem("token");
+          navigate(`/signin`);
+        }}
+        className="w-32 mx-auto bg-red-400 text-white"
+      >
+        Log Out
+      </Button>
     </div>
   );
 }
