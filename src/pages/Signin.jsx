@@ -48,6 +48,7 @@ export function Signin() {
     e.preventDefault();
     postUser();
   };
+
   return (
     <div>
       <div className="min-h-screen w-full flex justify-center items-center">
